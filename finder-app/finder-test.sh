@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 # Tester script for assignment 1 and assignment 2
 # Author: Mahesh Gudipati
 
@@ -9,6 +10,16 @@ NUMFILES=10
 WRITESTR=AELD_IS_FUN
 WRITEDIR=/tmp/aeld-data
 username=$(cat conf/username.txt)
+
+#clear the artifacts and invoke the make to compile the writer.c file
+make clean
+make
+if [ $? -eq 0 ]; then
+	echo "compilation successfull"
+else
+	echo "Failed to compile the image"
+	exit 1
+fi
 
 if [ $# -lt 2 ]
 then
@@ -48,7 +59,7 @@ fi
 
 for i in $( seq 1 $NUMFILES)
 do
-	./writer.sh "$WRITEDIR/${username}$i.txt" "$WRITESTR"
+	./writer "$WRITEDIR/${username}$i.txt" "$WRITESTR"
 done
 
 OUTPUTSTRING=$(./finder.sh "$WRITEDIR" "$WRITESTR")
